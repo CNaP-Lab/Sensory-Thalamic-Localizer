@@ -1,5 +1,28 @@
-restoredefaultpath;
-clear all;
+%% Analysis code for the Auditory and Visual Sensory Thalamic Localizer Task
+% Released under the GNU Public License version 3.
+
+%% Code authors: 
+% John C. Williams, Srineil Nizambad, Philip N. Tubiolo, Yash Patel, 
+% and Jared X. Van Snellenberg
+% Department of Psychiatry and Behavioral Health
+% Department of Biomedcial Engineering
+% Renaissance School of Medicine
+% Stony Brook University
+
+%% Task Presentation code additionally found here:
+% Neurobehavioral Systems Archives of Neurobehavioral 
+% Experiments and Stimuli
+% http://www.neurobs.com/ex_files/expt_view?id=302
+
+%% Accompanies the following manuscript:
+% John C. Williams, Philip N. Tubiolo, Zu Jie Zheng, 
+% Eilon B. Silver-Frankel, Dathy T. Pham, Natalka K. Haubold, 
+% Sameera K. Abeykoon, Anissa Abi-Dargham, Guillermo Horga, 
+% and Jared X. Van Snellenberg. (2024).
+% Functional Localization of the Human Auditory and Visual Thalamus Using 
+% a Thalamic Localizer Functional Magnetic Resonance Imaging Task.
+
+%% This sets up the path based on the location of the code
 code_file_path = mfilename('fullpath');
 addpath( fullfile( fileparts( code_file_path ), 'CNaP_Lab_Dependencies' ) );
 addpath( fullfile( fileparts( code_file_path ), 'spm12' ) );
@@ -7,44 +30,59 @@ addpath(fullfile( fileparts(code_file_path ), 'CanlabCore','Index_image_manip_to
 addpath(fullfile( fileparts(code_file_path ), 'CanlabCore','Image_space_tools'));
 addpath(fullfile( fileparts(code_file_path ), 'CanlabCore','Data_processing_tools'));
 
+%% This gets the location of the supplied AC and VC search region masks
+% Users can supply their own AC and VC search region masks if desired.
 supplied_masks_directory = fullfile( fileparts( code_file_path ), 'CNaP_Lab_Dependencies', 'masks' ) ;
 left_AC_search_region_mask = fullfile( supplied_masks_directory, 'temporal_left.nii' ) ;
 right_AC_search_region_mask = fullfile( supplied_masks_directory, 'temporal_right.nii' ) ;
 left_VC_search_region_mask = fullfile( supplied_masks_directory, 'occipital_left.nii' ) ;
 right_VC_search_region_mask = fullfile( supplied_masks_directory, 'occipital_right.nii' ) ;
 
-participant_TL_task_log_path = {'/mnt/jxvs2_01/Thal_Loc_Data/RDoC_Analysis/neil/rdoc/50023/THL/50023-thal.log'};%example
+%% Path to the participant's Sensory Thalamic Localizer task log file from Presentation
+participant_TL_task_log_path = {'/path/to/data/50023/THL/50023-thal.log'};%example
 
-subjectID = '50023';
+%% Participant's ID
+participantID = '50023';
 
-fROIoutputDirectory = '/mnt/jxvs2_01/Thal_Loc_Data/RDoC_Analysis/OneSubject_Home/50023/dataset/THL/MGN_LGN_fROIs'; %MGN and LGN ROI output directory
-intermediatesOutputDirectory = '/mnt/jxvs2_01/Thal_Loc_Data/RDoC_Analysis/OneSubject_Home/50023/dataset/THL/intermediates'; %Output directory for intermediates
+%% Desired path for the MGN and LGN functionally-defined regions of interest (fROIs)
+fROIoutputDirectory = '/desired/path/to/outputs/MGN_LGN_fROIs'; %MGN and LGN fROI output directory
 
-BOLD_fMRI_unsmoothed_data{1} = '/mnt/jxvs2_01/Thal_Loc_Data/RDoC_Analysis/neil/tTHL_fMRI_1.nii'; %example
-BOLD_fMRI_unsmoothed_data{2} = '/mnt/jxvs2_01/Thal_Loc_Data/RDoC_Analysis/neil/tTHL_fMRI_2.nii'; %example
-BOLD_fMRI_unsmoothed_data{3} = '/mnt/jxvs2_01/Thal_Loc_Data/RDoC_Analysis/neil/tTHL_fMRI_3.nii'; %example
-BOLD_fMRI_unsmoothed_data{4} = '/mnt/jxvs2_01/Thal_Loc_Data/RDoC_Analysis/neil/tTHL_fMRI_4.nii'; %example
+%% Desired path for intermediates used, such as outputs from first-level modeling and contrasts
+intermediatesOutputDirectory = '/desired/path/to/outputs/intermediates'; %Output directory for intermediates
 
-BOLD_fMRI_Smoothed_data{1} = '/mnt/jxvs2_01/Thal_Loc_Data/RDoC_Analysis/neil/stTHL_fMRI_1.nii'; %example
-BOLD_fMRI_Smoothed_data{2} = '/mnt/jxvs2_01/Thal_Loc_Data/RDoC_Analysis/neil/stTHL_fMRI_2.nii'; %example
-BOLD_fMRI_Smoothed_data{3} = '/mnt/jxvs2_01/Thal_Loc_Data/RDoC_Analysis/neil/stTHL_fMRI_3.nii'; %example
-BOLD_fMRI_Smoothed_data{4} = '/mnt/jxvs2_01/Thal_Loc_Data/RDoC_Analysis/neil/stTHL_fMRI_4.nii'; %example
+%% These are the unsmoothed BOLD fMRI data for each run, in a cell array.
+BOLD_fMRI_unsmoothed_data{1} = '/path/to/data/50023/THL/tTHL_fMRI_1.nii'; %example
+BOLD_fMRI_unsmoothed_data{2} = '/path/to/data/50023/THL/tTHL_fMRI_2.nii'; %example
+BOLD_fMRI_unsmoothed_data{3} = '/path/to/data/50023/THL/tTHL_fMRI_3.nii'; %example
+BOLD_fMRI_unsmoothed_data{4} = '/path/to/data/50023/THL/tTHL_fMRI_4.nii'; %example
 
-runMotionParameters{1} = '/mnt/jxvs2_01/Thal_Loc_Data/RDoC_Analysis/neil/trimmedMovement_Regressors1.txt'; %example
-runMotionParameters{2} = '/mnt/jxvs2_01/Thal_Loc_Data/RDoC_Analysis/neil/trimmedMovement_Regressors2.txt'; %example
-runMotionParameters{3} = '/mnt/jxvs2_01/Thal_Loc_Data/RDoC_Analysis/neil/trimmedMovement_Regressors3.txt'; %example
-runMotionParameters{4} = '/mnt/jxvs2_01/Thal_Loc_Data/RDoC_Analysis/neil/trimmedMovement_Regressors4.txt'; %example
+%% These are the Smoothed BOLD fMRI data for each run, in a cell array.
+% If you don't want to use smoothed data here, you can just use the 
+% path to unsmoothed data here instead. However, note that the results using 
+% unsmoothed data were not optimal for the tested dataset relative to when 
+% a 4mm FWHM Gaussian smoothing kernel was used. 
+% Thus, some testing and comparison using the dataset in question is 
+% important if a user desires to attempt using data that is unsmoothed, or 
+% smoothed with a lesser smoothing kernel.
+BOLD_fMRI_Smoothed_data{1} = '/path/to/data/50023/THL/stTHL_fMRI_1.nii'; %example
+BOLD_fMRI_Smoothed_data{2} = '/path/to/data/50023/THL/stTHL_fMRI_2.nii'; %example
+BOLD_fMRI_Smoothed_data{3} = '/path/to/data/50023/THL/stTHL_fMRI_3.nii'; %example
+BOLD_fMRI_Smoothed_data{4} = '/path/to/data/50023/THL/stTHL_fMRI_4.nii'; %example
 
-% provide the repetition time (TR) in seconds
+%% These are the motion parameters for each run, in a cell array.
+runMotionParameters{1} = '/path/to/data/50023/THL/trimmedMovement_Regressors1.txt'; %example
+runMotionParameters{2} = '/path/to/data/50023/THL/trimmedMovement_Regressors2.txt'; %example
+runMotionParameters{3} = '/path/to/data/50023/THL/trimmedMovement_Regressors3.txt'; %example
+runMotionParameters{4} = '/path/to/data/50023/THL/trimmedMovement_Regressors4.txt'; %example
+
+%% Repetition time for the BOLD data, (TR) in seconds
 % used by spm.stats.fmri_spec.timing.TR
 TR = 0.8;  % seconds
 
-% provide the path of the FreeSurfer segmentationatlas in MNI space,
-% containing MNI parcels, such as 'Atlas.wmparc.2.nii'
+%% Path of the FreeSurfer segmentation/parcellation atlas (Desikan-Killiany) in MNI space, Atlas.wmparc.2.nii
+FreeSurfer_segmentation_Atlas_path = '/path/to/data/50023/Atlas_wmparc.2.nii'; % Used to make a gray matter mask for 1st level modeling
 
-FreeSurfer_segmentation_Atlas_path = '/mnt/jxvs2_01/Thal_Loc_Data/RDoC_Analysis/OneSubject_Home/50023/Atlas_wmparc.2.nii'; % Used to make a gray matter mask for 1st level modeling
-
-%Participant's FreeSurfer thalamic segmentation, warped to MNI space.
+%% Participant's FreeSurfer thalamic segmentation, warped to MNI space.
 %See: https://freesurfer.net/fswiki/ThalamicNuclei
 % Iglesias JE, Insausti R, Lerma-Usabiaga G, Bocchetta M, Van Leemput K,
 % Greve DN, van der Kouwe A; Alzheimer's Disease Neuroimaging Initiative;
@@ -53,8 +91,9 @@ FreeSurfer_segmentation_Atlas_path = '/mnt/jxvs2_01/Thal_Loc_Data/RDoC_Analysis/
 % and histology. Neuroimage. 2018 Dec;183:314-326.
 % doi: 10.1016/j.neuroimage.2018.08.012. Epub 2018 Aug 17.
 % PMID: 30121337; PMCID: PMC6215335.
-FreeSurfer_Thalamic_Segmentation = '/mnt/jxvs2_01/Thal_Loc_Data/RDoC_Analysis/QCplots_HCP_4.2_for_final/50023/MNINonLinear/50023_ThalamicNuclei.v13.T1_WARPED.nii'; %example
+FreeSurfer_Thalamic_Segmentation = '/path/to/data/50023/50023_ThalamicNuclei.v13.T1_WARPED.nii'; %example
 
+%% Start the analysis
 [obj] = internal_TL_analysis( ...
     BOLD_fMRI_unsmoothed_data, ...
     BOLD_fMRI_Smoothed_data, ...
@@ -62,7 +101,7 @@ FreeSurfer_Thalamic_Segmentation = '/mnt/jxvs2_01/Thal_Loc_Data/RDoC_Analysis/QC
     FreeSurfer_segmentation_Atlas_path, ...
     FreeSurfer_Thalamic_Segmentation, ...
     participant_TL_task_log_path, ...
-    subjectID, ...
+    participantID, ...
     TR, ...
     left_AC_search_region_mask, ...
     right_AC_search_region_mask, ...
@@ -71,62 +110,3 @@ FreeSurfer_Thalamic_Segmentation = '/mnt/jxvs2_01/Thal_Loc_Data/RDoC_Analysis/QC
     intermediatesOutputDirectory, ...
     fROIoutputDirectory ...
     );
-
-
-function [obj] = internal_TL_analysis(...
-        BOLD_fMRI_unsmoothed_data, ...
-        BOLD_fMRI_Smoothed_data, ...
-        runMotionParameters, ...
-        FreeSurfer_segmentation_Atlas_path, ...
-        FreeSurfer_Thalamic_Segmentation, ...
-        participant_TL_task_log_path, ...
-        subjectID, ...
-        TR, ...
-        left_AC_search_region_mask, ...
-        right_AC_search_region_mask, ...
-        left_VC_search_region_mask, ...
-        right_VC_search_region_mask, ...
-        intermediatesOutputDirectory, ...
-        fROIoutputDirectory ...
-        )
-
-    if (~exist(intermediatesOutputDirectory,'dir'))
-        mkdir(intermediatesOutputDirectory);
-    end
-    if (~exist(fROIoutputDirectory,'dir'))
-        mkdir(fROIoutputDirectory);
-    end
-
-    obj.spmuse.TR = TR;
-    obj.home = intermediatesOutputDirectory;
-    obj.par.par.name = subjectID;
-    obj.par.par.home = intermediatesOutputDirectory;
-    obj.td.logs.source = participant_TL_task_log_path;
-
-    obj.tMNI_run = BOLD_fMRI_unsmoothed_data;
-    obj.stMNI_run = BOLD_fMRI_Smoothed_data;
-    obj.MPfile_name_run = runMotionParameters;
-
-    [Y_grayMatter_mask,V_grayMatter_mask, ...
-        Y_whiteMatter_mask,Y_CSF_mask, ...
-        grayMatterMask_eroded,whiteMatterMask_eroded,csfMask_eroded] = ...
-        TLmakeMasks(FreeSurfer_segmentation_Atlas_path);
-
-    % run all the main 6 functions of the pipeline.
-    obj = TLreadLogs(obj , participant_TL_task_log_path);
-
-    obj = TLprep1l(obj,Y_grayMatter_mask,V_grayMatter_mask);
-
-    obj = TLrun1l(obj);
-
-    obj = TLmakeSearchSpace(obj,FreeSurfer_Thalamic_Segmentation,FreeSurfer_segmentation_Atlas_path);
-
-    obj = TLgetROIs(obj, ...
-        left_AC_search_region_mask,right_AC_search_region_mask, ...
-        left_VC_search_region_mask,right_VC_search_region_mask, ...
-        Y_grayMatter_mask,Y_whiteMatter_mask,Y_CSF_mask,...
-        grayMatterMask_eroded,whiteMatterMask_eroded,csfMask_eroded, ...
-        intermediatesOutputDirectory, ...
-        fROIoutputDirectory);
-
-end
