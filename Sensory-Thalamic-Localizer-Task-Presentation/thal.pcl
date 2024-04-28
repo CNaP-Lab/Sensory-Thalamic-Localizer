@@ -1,0 +1,137 @@
+#designed for clustered temporal acquisition (temporal sparse sampling)
+#9450 ms between clusters, 3 x 850 ms cluster for a total 12 s trial time
+#25 trials per run
+
+
+###########################
+##### Editable Values #####
+###########################
+
+int trial_length = 12000;
+int runs = 4;
+int runlength = 16;
+int num_trials = runs * runlength;
+int wait_pulses = 3;
+int TR = 800;
+
+###########################
+# Non-Editable Variables ##
+###########################
+
+int pulses;
+bool lbreak;
+int ctime = 0;
+
+int snum = 0;
+loop until snum>0 begin
+	snum = int(system_keyboard.get_input(input_pic,input_txt));
+end;
+int startrun = 0;
+input_pic.set_part(1,input2);
+loop until startrun > 0 && startrun < runs+1 begin
+	startrun = int(system_keyboard.get_input(input_pic,input_txt));
+end;
+
+
+###########################
+##### Declare Arrays ######
+###########################
+
+array<int>condition_array[runs][runlength] = {{2,1,2,1,1,2,2,1,2,1,2,1,1,2,2,1},{1,2,2,1,1,2,1,1,2,1,2,2,1,2,2,1},{2,1,1,2,2,1,1,2,1,2,1,2,2,1,1,2},{1,1,2,1,2,1,2,2,1,2,1,2,2,1,1,2}};
+array<int>stim_array[runs][runlength][9] = {{{309,199,449,40,444,109,358,10,200},{424,183,134,266,249,378,250,241,48},{277,15,403,387,315,229,262,106,46},{139,207,41,23,93,31,92,10,221},{176,337,162,355,163,168,438,32,262},{410,425,175,145,418,280,411,140,214},{173,59,276,43,160,123,367,8,149},{336,46,150,187,185,295,30,388,118},{375,191,135,12,381,87,449,55,145},{384,285,9,211,100,361,392,105,256},{190,378,443,253,288,93,118,158,347},{201,122,169,355,369,307,100,121,339},{243,108,73,3,167,364,60,345,435},{154,290,417,385,374,395,9,396,170},{36,12,71,21,308,402,5,435,22},{431,324,312,52,292,157,287,320,235}},{{388,209,172,177,275,193,1,56,180},{335,109,318,258,65,50,444,285,112},{317,7,151,244,192,102,382,346,401},{218,304,127,113,323,390,69,62,329},{164,397,299,416,110,129,386,215,230},{336,223,251,360,403,172,27,231,97},{195,149,427,430,170,359,380,147,261},{43,278,237,155,335,216,322,157,204},{260,302,131,261,219,133,105,306,91},{18,275,99,52,24,272,274,377,365},{28,408,111,57,166,234,161,416,379},{86,249,101,356,370,165,391,311,203},{437,142,14,315,108,294,33,415,45},{38,141,310,220,2,267,63,56,432},{137,319,126,128,450,326,289,196,205},{116,362,212,327,349,383,329,194,333}},{{264,83,210,240,28,3,124,373,16},{293,230,368,245,24,413,351,166,376},{246,429,29,116,169,175,62,35,17},{64,407,179,98,4,181,130,13,138},{141,19,365,371,171,26,77,404,414},{94,394,212,345,407,13,392,296,266},{45,120,446,433,422,84,390,226,298},{19,342,353,115,213,150,334,67,202},{247,236,217,421,51,276,81,328,233},{114,301,309,6,239,253,37,20,332},{445,222,284,225,399,352,269,398,354},{417,76,154,357,413,61,78,436,74},{374,420,443,283,431,356,181,184,156},{119,228,254,39,208,320,152,98,75},{393,303,395,96,321,198,92,385,268},{270,89,300,148,363,136,144,314,72}},{{426,436,94,103,58,80,389,248,232},{439,104,256,4,428,223,185,132,318},{409,203,434,159,259,263,103,68,34},{171,164,306,282,405,291,305,313,197},{188,414,146,90,182,66,220,325,279},{194,350,82,260,432,330,152,400,412},{255,176,79,54,343,57,53,348,25},{251,11,107,204,99,153,47,42,241},{342,423,366,272,440,419,44,439,271},{447,286,95,252,117,265,206,341,189},{389,177,359,227,281,200,233,85,82},{58,402,143,442,399,401,238,340,372},{379,70,95,232,387,334,257,316,441},{224,448,323,346,21,284,273,160,70},{297,156,287,338,344,88,102,174,148},{49,290,178,406,242,331,221,186,125}}};
+
+
+###########################
+###### Start Trials #######
+###########################
+
+loop int r = startrun until r > runs begin
+
+	pulses =  pulse_manager.main_pulse_count();
+	
+	ins_pic.set_part(1, wait);
+	stim_event.set_stimulus(ins_pic);
+	stim_event.set_event_code("Subject_"+string(snum)+"_Run_"+string(r));
+	trial_event.present();
+	#lbreak = false;
+	#loop until lbreak == true && clock.time() - ctime > 10000 begin 
+	#if pulse_manager.main_pulse_count() > pulses then
+	#		pulses = pulse_manager.main_pulse_count();
+	#		lbreak = true;
+	#		ctime = clock.time();
+	#	end;			
+	#	trial_event.present();
+	#end;
+	#ins_pic.set_part(1, wait);
+	#stim_event.set_stimulus(default);
+	trial_event.present();
+	#pulses = pulse_manager.main_pulse_count();
+	#loop until pulse_manager.main_pulse_count() > pulses begin end;
+	#ctime = clock.time();
+	#loop until clock.time() - ctime >= 15000 begin end;
+	pulses = pulse_manager.main_pulse_count();
+	loop until pulse_manager.main_pulse_count() >= pulses+wait_pulses begin trial_event.present(); end;
+	
+	stim_event.set_stimulus(default);
+	
+	pulses = pulse_manager.main_pulse_count();
+	loop until pulse_manager.main_pulse_count() >= pulses+wait_pulses begin trial_event.present(); end;
+
+	loop int i = 1 until i > runlength begin
+		
+		ctime = pulse_manager.main_pulse_time(pulse_manager.main_pulse_count());
+		loop until clock.time() - ctime >= TR begin end;
+		
+		
+		if condition_array[r][i] == 1 then
+			snd1_event.set_stimulus(aud_array[stim_array[r][i][1]]);
+			snd1_event.set_event_code("Stim_"+string(stim_array[r][i][1]));
+			snd2_event.set_stimulus(aud_array[stim_array[r][i][2]]);
+			snd2_event.set_event_code("Stim_"+string(stim_array[r][i][2]));
+			snd3_event.set_stimulus(aud_array[stim_array[r][i][3]]);
+			snd3_event.set_event_code("Stim_"+string(stim_array[r][i][3]));
+			snd4_event.set_stimulus(aud_array[stim_array[r][i][4]]);
+			snd4_event.set_event_code("Stim_"+string(stim_array[r][i][4]));
+			snd5_event.set_stimulus(aud_array[stim_array[r][i][5]]);
+			snd5_event.set_event_code("Stim_"+string(stim_array[r][i][5]));
+			snd6_event.set_stimulus(aud_array[stim_array[r][i][6]]);
+			snd6_event.set_event_code("Stim_"+string(stim_array[r][i][6]));
+			snd7_event.set_stimulus(aud_array[stim_array[r][i][7]]);
+			snd7_event.set_event_code("Stim_"+string(stim_array[r][i][7]));
+			snd8_event.set_stimulus(aud_array[stim_array[r][i][8]]);
+			snd8_event.set_event_code("Stim_"+string(stim_array[r][i][8]));
+			snd9_event.set_stimulus(aud_array[stim_array[r][i][9]]);
+			snd9_event.set_event_code("Stim_"+string(stim_array[r][i][9]));
+			aud_trial.present();
+		elseif condition_array[r][i] == 2 then
+			check_trial.present();
+		elseif condition_array[r][i] == 3 then
+			msnd1_event.set_stimulus(aud_array[stim_array[r][i][1]]);
+			msnd1_event.set_event_code("Stim_"+string(stim_array[r][i][1]));
+			msnd2_event.set_stimulus(aud_array[stim_array[r][i][2]]);
+			msnd2_event.set_event_code("Stim_"+string(stim_array[r][i][2]));
+			msnd3_event.set_stimulus(aud_array[stim_array[r][i][3]]);
+			msnd3_event.set_event_code("Stim_"+string(stim_array[r][i][3]));
+			msnd4_event.set_stimulus(aud_array[stim_array[r][i][4]]);
+			msnd4_event.set_event_code("Stim_"+string(stim_array[r][i][4]));
+			msnd5_event.set_stimulus(aud_array[stim_array[r][i][5]]);
+			msnd5_event.set_event_code("Stim_"+string(stim_array[r][i][5]));
+			msnd6_event.set_stimulus(aud_array[stim_array[r][i][6]]);
+			msnd6_event.set_event_code("Stim_"+string(stim_array[r][i][6]));
+			msnd7_event.set_stimulus(aud_array[stim_array[r][i][7]]);
+			msnd7_event.set_event_code("Stim_"+string(stim_array[r][i][7]));
+			msnd8_event.set_stimulus(aud_array[stim_array[r][i][8]]);
+			msnd8_event.set_event_code("Stim_"+string(stim_array[r][i][8]));
+			msnd9_event.set_stimulus(aud_array[stim_array[r][i][9]]);
+			msnd9_event.set_event_code("Stim_"+string(stim_array[r][i][9]));
+			mixed_trial.present();
+		end;
+		
+		pulses =  pulse_manager.main_pulse_count();
+		loop until pulse_manager.main_pulse_count() >= pulses+wait_pulses begin trial_event.present(); end;
+		
+		i = i + 1;
+	end;
+	
+	r = r + 1;
+end;
