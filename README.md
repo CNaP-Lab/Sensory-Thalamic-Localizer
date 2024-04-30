@@ -36,4 +36,16 @@ Requirements:<br>
     See: https://freesurfer.net/fswiki/ThalamicNuclei<br>
     Iglesias JE, Insausti R, Lerma-Usabiaga G, Bocchetta M, Van Leemput K, Greve DN, van der Kouwe A; Alzheimer's Disease Neuroimaging Initiative; Fischl B, Caballero-Gaudes C, Paz-Alonso PM.<br>
     A probabilistic atlas of the human thalamic nuclei combining ex vivo MRI and histology. Neuroimage. 2018 Dec;183:314-326.<br>
-    doi: 10.1016/j.neuroimage.2018.08.012. Epub 2018 Aug 17. PMID: 30121337; PMCID: PMC6215335.
+    doi: 10.1016/j.neuroimage.2018.08.012. Epub 2018 Aug 17. PMID: 30121337; PMCID: PMC6215335.<br>
+
+
+Please note that the Presentation task must be set to either "fMRI" or "fMRI_emulation" mode. fMRI mode should be used exclusively alongside an MRI scanner that can send volume acquisition pulses to the computer running Presentation.<br>
+fMRI_emulation mode should be used only for testing. One can switch between modes by editing lines 13 and 14 of the thal.sce file. One of these lines must have a comment character (#) preceding the line in order to deactivate it, which the other must not.<br>
+
+Correct settings:
+fMRI mode:<br>
+scenario_type = fMRI;<br>
+#scenario_type = fMRI_emulation;<br>
+fMRI Emulation mode:<br>
+#scenario_type = fMRI;<br>
+scenario_type = fMRI_emulation;<br>
