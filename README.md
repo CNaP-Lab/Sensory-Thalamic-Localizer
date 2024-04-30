@@ -16,7 +16,7 @@ http://www.neurobs.com/ex_files/expt_view?id=302
 Accompanies the following manuscript:<br>
 John C. Williams, Philip N. Tubiolo, Zu Jie Zheng, Eilon B. Silver-Frankel, Dathy T. Pham, Natalka K. Haubold, Sameera K. Abeykoon, Anissa Abi-Dargham, Guillermo Horga, and Jared X. Van Snellenberg. (2024).<br>
 Functional Localization of the Human Auditory and Visual Thalamus Using a Thalamic Localizer Functional Magnetic Resonance Imaging Task.<br>
-bioRxiv 2024.04.28.591516; doi: https://doi.org/10.1101/2024.04.28.591516
+bioRxiv 2024.04.28.591516; doi: https://doi.org/10.1101/2024.04.28.591516<br>
 https://www.biorxiv.org/content/10.1101/2024.04.28.591516
 
 To use this code, see the script: main_TL_analysis.m.<br>
