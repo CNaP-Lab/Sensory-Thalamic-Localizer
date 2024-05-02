@@ -56,13 +56,14 @@ BOLD_fMRI_unsmoothed_data{2} = '/path/to/data/50023/THL/tTHL_fMRI_2.nii'; %examp
 BOLD_fMRI_unsmoothed_data{3} = '/path/to/data/50023/THL/tTHL_fMRI_3.nii'; %example
 BOLD_fMRI_unsmoothed_data{4} = '/path/to/data/50023/THL/tTHL_fMRI_4.nii'; %example
 
+%%OPTIONAL
 %% These are the Smoothed BOLD fMRI data for each run, in a cell array.
-% If you don't want to use smoothed data here, you can just use the 
-% path to unsmoothed data here instead. However, note that the results using 
-% unsmoothed data were not optimal for the tested dataset relative to when 
-% a 4mm FWHM Gaussian smoothing kernel was used. 
-% Thus, some testing and comparison using the dataset in question is 
-% important if a user desires to attempt using data that is unsmoothed, or 
+% This is an optional input if you would like to provide your own smoothed time series volumes
+% as opposed to computed by the pipeline. However, note that the results using
+% unsmoothed data were not optimal for the tested dataset relative to when
+% a 4mm FWHM Gaussian smoothing kernel was used.
+% Thus, some testing and comparison using the dataset in question is
+% important if a user desires to attempt using data that is unsmoothed, or
 % smoothed with a lesser smoothing kernel.
 BOLD_fMRI_Smoothed_data{1} = '/path/to/data/50023/THL/stTHL_fMRI_1.nii'; %example
 BOLD_fMRI_Smoothed_data{2} = '/path/to/data/50023/THL/stTHL_fMRI_2.nii'; %example
@@ -93,10 +94,21 @@ FreeSurfer_segmentation_Atlas_path = '/path/to/data/50023/Atlas_wmparc.2.nii'; %
 % PMID: 30121337; PMCID: PMC6215335.
 FreeSurfer_Thalamic_Segmentation = '/path/to/data/50023/50023_ThalamicNuclei.v13.T1_WARPED.nii'; %example
 
+% OPTIONAL
+% This is an optional input needed to smoothen the unsmoothed time series 
+% if you do not intend to use user fed smoothed volumes 
+smoothingFWHM = 4; %example
+
+% Notes:
+%   - If both ‘BOLD_fMRI_Smoothed_data’ and ‘smoothingFWHM’ are provided, an error will be thrown.
+%   - If neither ‘BOLD_fMRI_Smoothed_data’ and ‘smoothingFWHM’ are provided, an error will be thrown.
+
+
 %% Start the analysis
+% considering user fed smoothed timeseries volumes
+% optional input 'BOLD_fMRI_Smoothed_data' and 'smoothingFWHM' provided as name value pair
 [obj] = internal_TL_analysis( ...
     BOLD_fMRI_unsmoothed_data, ...
-    BOLD_fMRI_Smoothed_data, ...
     runMotionParameters, ...
     FreeSurfer_segmentation_Atlas_path, ...
     FreeSurfer_Thalamic_Segmentation, ...
@@ -108,5 +120,7 @@ FreeSurfer_Thalamic_Segmentation = '/path/to/data/50023/50023_ThalamicNuclei.v13
     left_VC_search_region_mask, ...
     right_VC_search_region_mask, ...
     intermediatesOutputDirectory, ...
-    fROIoutputDirectory ...
+    fROIoutputDirectory, ...
+    'BOLD_fMRI_Smoothed_data', BOLD_fMRI_Smoothed_data, ... % either this or smoothingFWHM
+    'SmoothingFWHM', smoothingFWHM ... % either this or BOLD_fMRI_Smoothed_data
     );

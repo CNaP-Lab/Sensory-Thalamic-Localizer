@@ -5,7 +5,7 @@ function obj = internal_TL_analysis(varargin)
     %   runMotionParameters - Cell array of strings, paths to motion parameter files.
     %   FreeSurfer_segmentation_Atlas_path - String, path to the atlas for segmentation.
     %   FreeSurfer_Thalamic_Segmentation - String, path to thalamic segmentation data.
-    %   participant_TL_task_log_path - cell array of path to task log file. 
+    %   participant_TL_task_log_path - Cell array of path to task log file. 
     %   subjectID - String, identifier for the subject.
     %   TR - Numeric, repetition time.
     %   left_AC_search_region_mask, right_AC_search_region_mask, left_VC_search_region_mask, right_VC_search_region_mask - String, paths to masks.
