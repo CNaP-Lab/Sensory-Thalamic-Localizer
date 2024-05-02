@@ -136,7 +136,6 @@ function obj = internal_TL_analysis(varargin)
         else
             % Error if neither smoothed data nor smoothing parameter is provided
             % Ideally should not reach here as there are enough checks before
-            % Remove this condition before publishing
             error('Either smoothed data must be provided or a smoothing FWHM must be specified.');
         end
     
