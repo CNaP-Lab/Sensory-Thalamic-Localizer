@@ -99,6 +99,15 @@ FreeSurfer_Thalamic_Segmentation = '/path/to/data/50023/50023_ThalamicNuclei.v13
 % if you do not intend to use user fed smoothed volumes 
 smoothingFWHM = 4; %example
 
+% OPTIONAL
+% This is an optional input to confirm trimming the time series and motion parameters set by 'nrmv' i.e. the next optional input
+trim = false;
+
+% OPTIONAL
+% This is an optional input, If trimming is desired, enter # of volumes to trim, for voltrim.
+% Note trimming is done on the MPs and unsmoothed data at the same time.
+nrmv = 6; %example
+
 % Notes:
 %   - If both ‘BOLD_fMRI_Smoothed_data’ and ‘smoothingFWHM’ are provided, an error will be thrown.
 %   - If neither ‘BOLD_fMRI_Smoothed_data’ and ‘smoothingFWHM’ are provided, an error will be thrown.
@@ -122,5 +131,7 @@ smoothingFWHM = 4; %example
     intermediatesOutputDirectory, ...
     fROIoutputDirectory, ...
     'BOLD_fMRI_Smoothed_data', BOLD_fMRI_Smoothed_data, ... % either this or smoothingFWHM
-    'SmoothingFWHM', smoothingFWHM ... % either this or BOLD_fMRI_Smoothed_data
+    'SmoothingFWHM', smoothingFWHM, ... % either this or BOLD_fMRI_Smoothed_data
+    'trim', trim, ...
+    'nrmv', nrmv ...  
     );
