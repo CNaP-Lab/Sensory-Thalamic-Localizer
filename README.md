@@ -38,8 +38,8 @@ scenario_type = fMRI;
 fMRI Emulation mode:<br>
 
 ```bash
-#scenario_type = fMRI;<br>
-scenario_type = fMRI_emulation;<br>
+#scenario_type = fMRI;
+scenario_type = fMRI_emulation;
 ```
 
 <br>
