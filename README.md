@@ -3,23 +3,6 @@
 Analysis code for the Auditory and Visual Sensory Thalamic Localizer Task<br>
 Released under the GNU Public License version 3.
 
-Code authors: <br>
-John C. Williams, Srineil Nizambad, Philip N. Tubiolo, Yash Patel, and Jared X. Van Snellenberg<br>
-Department of Psychiatry and Behavioral Health<br>
-Department of Biomedcial Engineering<br>
-Renaissance School of Medicine<br>
-Stony Brook University
-
-Task Presentation code additionally found here:<br>
-Neurobehavioral Systems Archives of Neurobehavioral Experiments and Stimuli<br>
-http://www.neurobs.com/ex_files/expt_view?id=302
-
-Accompanies the following manuscript:<br>
-John C. Williams, Philip N. Tubiolo, Zu Jie Zheng, Eilon B. Silver-Frankel, Dathy T. Pham, Natalka K. Haubold, Sameera K. Abeykoon, Anissa Abi-Dargham, Guillermo Horga, and Jared X. Van Snellenberg. (2024).<br>
-Functional Localization of the Human Auditory and Visual Thalamus Using a Thalamic Localizer Functional Magnetic Resonance Imaging Task.<br>
-bioRxiv 2024.04.28.591516; doi: https://doi.org/10.1101/2024.04.28.591516<br>
-https://www.biorxiv.org/content/10.1101/2024.04.28.591516
-
 To use this code, see the script: main_TL_analysis.m.<br>
 It sets up the required variables as described in the comments, and calls the main function that performs the analysis: internal_TL_analysis.m.
 
@@ -39,7 +22,6 @@ Requirements:<br>
     A probabilistic atlas of the human thalamic nuclei combining ex vivo MRI and histology. Neuroimage. 2018 Dec;183:314-326.<br>
     doi: 10.1016/j.neuroimage.2018.08.012. Epub 2018 Aug 17. PMID: 30121337; PMCID: PMC6215335.<br>
 <br>
-<br>
 Please note that the Presentation task must be set to either "fMRI" or "fMRI_emulation" mode.<br>
 fMRI mode should be used exclusively alongside an MRI scanner that can send volume acquisition pulses to the computer running Presentation.<br>
 fMRI_emulation mode should be used only for testing.<br>
@@ -47,9 +29,39 @@ One can switch between modes by editing lines 13 and 14 of the thal.sce file. <b
 One of these lines must have a comment character (#) preceding the line in order to deactivate it, which the other must not.<br>
 <br>
 fMRI mode:<br>
-scenario_type = fMRI;<br>
-#scenario_type = fMRI_emulation;<br>
-<br>
+
+```bash
+scenario_type = fMRI;
+#scenario_type = fMRI_emulation;
+```
+
 fMRI Emulation mode:<br>
+
+```bash
 #scenario_type = fMRI;<br>
 scenario_type = fMRI_emulation;<br>
+```
+
+<br>
+
+Please cite this code as follows:<br>
+John C. Williams, Philip N. Tubiolo, Srineil Nizambad, Yash Patel, Zu Jie Zheng, Eilon B. Silver-Frankel, Dathy T. Pham, Natalka K. Haubold, Sameera K. Abeykoon, Anissa Abi-Dargham, Guillermo Horga, Jared X. Van Snellenberg. (2024).<br>
+*Auditory and visual sensory thalamic localizer task* (Version \<Release Version\>) \[Computer software\].<br>
+Available from https://github.com/CNaP-Lab/Sensory-Thalamic-Localizer and http://www.neurobs.com/ex_files/expt_view?id=302.
+
+Code authors: <br>
+John C. Williams, Srineil Nizambad, Philip N. Tubiolo, Yash Patel, and Jared X. Van Snellenberg<br>
+Department of Psychiatry and Behavioral Health<br>
+Department of Biomedcial Engineering<br>
+Renaissance School of Medicine<br>
+Stony Brook University
+
+Task Presentation code additionally found here:<br>
+Neurobehavioral Systems Archives of Neurobehavioral Experiments and Stimuli<br>
+http://www.neurobs.com/ex_files/expt_view?id=302
+
+Accompanies the following manuscript:<br>
+John C. Williams, Philip N. Tubiolo, Zu Jie Zheng, Eilon B. Silver-Frankel, Dathy T. Pham, Natalka K. Haubold, Sameera K. Abeykoon, Anissa Abi-Dargham, Guillermo Horga, and Jared X. Van Snellenberg. (2024).<br>
+Functional Localization of the Human Auditory and Visual Thalamus Using a Thalamic Localizer Functional Magnetic Resonance Imaging Task.<br>
+*bioRxiv* 2024.04.28.591516; doi: https://doi.org/10.1101/2024.04.28.591516<br>
+https://www.biorxiv.org/content/10.1101/2024.04.28.591516
