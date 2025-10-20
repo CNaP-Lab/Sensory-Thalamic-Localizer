@@ -29,7 +29,7 @@ Requirements:<br>
 3. Desired path for the MGN and LGN functionally-defined regions of interest (fROIs)
 4. Desired path for intermediates used, such as outputs from first-level modeling and contrasts
 5. Paths to each run of unsmoothed BOLD fMRI data, supplied in a cell array.
-6. Paths to each run of smooted BOLD fMRI data, supplied in a cell array. *Alternatively*, provide a numeric `smoothingFWHM` <br> 
+6. Paths to each run of smoothed BOLD fMRI data, supplied in a cell array. *Alternatively*, provide a numeric `smoothingFWHM` <br> 
    kernel used to smooth the BOLD data if the smoothing is to be performed during processing. (EITHER ONE)
 7. 'trim is an 'OPTIONAL Boolean value to confirm trimming the time series and motion parameters set by 'nrmv' <br> 
    i.e. the next optional input
